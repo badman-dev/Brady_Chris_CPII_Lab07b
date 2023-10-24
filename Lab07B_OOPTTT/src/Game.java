@@ -12,10 +12,6 @@ public class Game {
         return player;
     }
 
-    public void setPlayer(String player) {
-        this.player = player;
-    }
-
     public void playerMove(int row, int col) {
         if (!playing) {
             return;
