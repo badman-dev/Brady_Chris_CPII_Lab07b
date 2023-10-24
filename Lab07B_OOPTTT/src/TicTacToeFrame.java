@@ -12,12 +12,7 @@ public class TicTacToeFrame extends JFrame {
 
     private static TicTacToeTile[] ticBtns;
 
-    boolean finished = false;
-    boolean playing = true;
-    String player = "X";
-    int moveCnt = 0;
-    final int MOVES_FOR_WIN = 5;
-    final int MOVES_FOR_TIE = 7;
+    Game game = new Game();
     public TicTacToeFrame() {
         createTitlePanel();
         createGamePanel();
@@ -62,7 +57,7 @@ public class TicTacToeFrame extends JFrame {
 
         for (TicTacToeTile ticBtn : ticBtns)
         {
-            ticBtn.addActionListener((ActionEvent ae) -> playerMove(ticBtn.getRow(), ticBtn.getCol()));
+            ticBtn.addActionListener((ActionEvent ae) -> handleTurn(ticBtn.getRow(), ticBtn.getCol()));
             gamePnl.add(ticBtn);
         }
         add(gamePnl, BorderLayout.CENTER);
@@ -80,62 +75,9 @@ public class TicTacToeFrame extends JFrame {
         add(turnPnl, BorderLayout.SOUTH);
     }
 
-    private void playerMove(int row, int col) {
-        if (!playing) {
-            return;
-        }
-        if (!Board.isValidMove(row, col)) {
-            JOptionPane.showMessageDialog(null, "Illegal move!");
-            return;
-        }
-
-        Board.board[row][col] = player;
-        moveCnt++;
-
-        if(moveCnt >= MOVES_FOR_WIN)
-        {
-            if(Board.isWin(player))
-            {
-                display();
-                System.out.println("Player " + player + " wins!");
-                playing = false;
-                JOptionPane.showMessageDialog(null, "Player " + player + " wins!");
-                int answer = JOptionPane.showConfirmDialog(null, "Do you want to play again?", "Play again?", JOptionPane.YES_NO_OPTION);
-                if (answer == JOptionPane.YES_OPTION) {
-                    Board.clearBoard();
-                    display();
-                    playing = true;
-                }
-            }
-        }
-        if(moveCnt >= MOVES_FOR_TIE)
-        {
-            if(Board.isTie())
-            {
-                display();
-                System.out.println("It's a Tie!");
-                playing = false;
-                JOptionPane.showMessageDialog(null, "It's a tie!");
-                int answer = JOptionPane.showConfirmDialog(null, "Do you want to play again?", "Play again?", JOptionPane.YES_NO_OPTION);
-                if (answer == JOptionPane.YES_OPTION) {
-                    Board.clearBoard();
-                    display();
-                    playing = true;
-                }
-            }
-        }
-        if (!playing) {
-
-        }
-        if(player.equals("X"))
-        {
-            player = "O";
-        }
-        else
-        {
-            player = "X";
-        }
-
+    private void handleTurn(int row, int col)
+    {
+        game.playerMove(row, col);
         display();
     }
 
@@ -156,8 +98,7 @@ public class TicTacToeFrame extends JFrame {
             }
             System.out.println();
         }
-
-        turnLbl.setText("Player " + player + "'s turn.");
-
+        turnLbl.setText("Player " + game.getPlayer() + "'s turn.");
     }
+
 }
